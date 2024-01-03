@@ -107,6 +107,16 @@ void* threadFunction(void* args)
 	state[2] = "ready";
 	state[3] = "ready";
    	int tot_time=0;
+	char** string1 = NULL;
+    int string1_size = 1000;  // Initial size
+    int string1_capacity = 1000;  // Initial capacity
+    string1 = (char**)malloc(string1_capacity * sizeof(char*));
+
+   	for (int i = 0; i < string1_capacity; ++i)
+   	{
+       		string1[i] = (char*)malloc(1000 * sizeof(char));
+       		memset(string1[i], '\0', 1000);
+   	}
 	
 	/*initial pc*/
 	pc[0]=1000;
@@ -206,20 +216,25 @@ void* threadFunction(void* args)
 					int count = 0;
 					if ( file != NULL )
 					{
-						char string1[1000][1000];
+						
+
+						
+						
 						int ctr=0;
 						int q=0;
-						char line[256]; 
+						char line[1000]; 
+						memset(line, '\0', sizeof(line));
 
-						while (fgets(line, sizeof line, file) != NULL) /* read a line */
+						while (fgets(line, sizeof(line), file) != NULL) /* read a line */
 						{
+
 							if (count == t[running])
 							{
 								break;
 							}
 							else
 							{	//to read single word
-								for(int p=0;p<=(strlen(line));p++)
+								for(int p=0;p<(strlen(line));p++)
 								{
 									// if space or NULL found, assign NULL into newString[ctr]
 									if(line[p]==' '|| line[p]=='\0')
@@ -246,6 +261,13 @@ void* threadFunction(void* args)
 								count++;
 							}
 						}
+						 for (int i = 0; i < string1_capacity; ++i)
+    						{
+        						free(string1[i]);
+    						}
+
+   							 // Free the array of pointers
+    						free(string1);
 						fclose(file);
 					}
 					state[running]="Ready";
